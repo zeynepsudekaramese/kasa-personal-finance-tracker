@@ -65,5 +65,13 @@ public class TransactionRepository {
 
     public int deleteById(int id) {
         return jdbcTemplate.update("DELETE FROM transactions WHERE id = ?", id);
+        
     }
+    public BigDecimal sumAmountByCategoryAndDateRange(int categoryId, LocalDate start, LocalDate end) {
+        return jdbcTemplate.queryForObject(
+                "SELECT COALESCE(SUM(amount), 0) FROM transactions " +
+                        "WHERE category_id = ? AND type = 'EXPENSE' AND occurred_on BETWEEN ? AND ?",
+                BigDecimal.class, categoryId, start, end);
+    }
+    
 }
